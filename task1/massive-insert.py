@@ -20,6 +20,7 @@ def time_logger(func):
         end_time = time.perf_counter()
         print(f"Function '{fname}' {result} took {end_time - start_time:.4f} seconds.")
         return result
+
     return wrapper2
 
 
@@ -28,6 +29,7 @@ def postgres(func):
     A decorator that establishes a connection to a PostgreSQL database using the DSN (Data Source Name),
     creates a cursor, and passes them to the decorated function.
     """
+
     def wrapper(*args, **kwargs):
         connect = psycopg2.connect(DSN)
         cursor = connect.cursor()
@@ -35,6 +37,7 @@ def postgres(func):
         cursor.close()
         connect.close()
         return result
+
     return wrapper
 
 
@@ -43,7 +46,6 @@ def create_table(connect, cursor):
     """
     Drops the table `user_counter` if it exists, creates a new `user_counter` table,
     and inserts an initial row with counter and version set to 0 for the user with user_id = 1.
-
     """
     cursor.execute("""
     drop table if exists user_counter;
@@ -53,7 +55,8 @@ def create_table(connect, cursor):
         , version integer
     );
     insert into user_counter (counter, version) values (0, 0);
-    """)
+    """
+    )
     connect.commit()
     return "Clear table `user_counter`."
 
@@ -95,13 +98,15 @@ def lost_update(connect, cursor, tread_id: int) -> str:
     incrementing it, and writing it back to the database without proper locking
     mechanisms, which can lead to race conditions in a concurrent environment.
     """
-    for _ in range(10000):
+    for _ in range(10):
         cursor.execute("select counter from user_counter where user_id = 1;")
         counter = cursor.fetchone()[0]
         counter += 1
-        cursor.execute(f"update user_counter set counter = {counter} where user_id = 1;")
+        cursor.execute(
+            f"update user_counter set counter = {counter} where user_id = 1;"
+        )
         connect.commit()
-    return (f"tread {tread_id} with counter {counter}")
+    return f"tread {tread_id} with counter {counter}"
 
 
 @postgres
@@ -111,21 +116,23 @@ def lost_update_serializable(connect, cursor, tread_id):
     Executes a series of updates on a counter in a PostgreSQL database using the SERIALIZABLE isolation level.
     """
     connect.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE)
-    for _ in range(10000):
+    for _ in range(10):
         while True:
             try:
                 cursor.execute("select counter from user_counter where user_id = 1;")
                 counter = cursor.fetchone()[0]
                 counter += 1
-                cursor.execute(f"update user_counter set counter = {counter} where user_id = 1;")
+                cursor.execute(
+                    f"update user_counter set counter = {counter} where user_id = 1;"
+                )
                 connect.commit()
                 break
             except OperationalError as e:
-                if e.pgcode != '40001':
+                if e.pgcode != "40001":
                     raise
                 # Serialization failure
                 connect.rollback()
-    return (f"tread {tread_id} with counter {counter}")
+    return f"tread {tread_id} with counter {counter}"
 
 
 @postgres
@@ -135,10 +142,10 @@ def in_place_update(connect, cursor, tread_id):
     This function performs an in-place update on the user_counter table by incrementing
     the counter for the user with user_id = 1.
     """
-    for _ in range(10000):
+    for _ in range(10):
         cursor.execute("update user_counter set counter = counter+1 where user_id = 1;")
         connect.commit()
-    return (f"tread {tread_id}")
+    return f"tread {tread_id}"
 
 
 @postgres
@@ -147,13 +154,15 @@ def row_level_locking(connect, cursor, tread_id):
     """
     Perform row-level locking to increment a counter in a database table.
     """
-    for _ in range(10000):
+    for _ in range(10):
         cursor.execute("select counter from user_counter where user_id = 1 for update;")
         counter = cursor.fetchone()[0]
         counter += 1
-        cursor.execute(f"update user_counter set counter = {counter} where user_id = 1;")
+        cursor.execute(
+            f"update user_counter set counter = {counter} where user_id = 1;"
+        )
         connect.commit()
-    return (f"tread {tread_id} with counter {counter}")
+    return f"tread {tread_id} with counter {counter}"
 
 
 @postgres
@@ -162,22 +171,26 @@ def optimistic_concurrency_control(connect, cursor, tread_id):
     """
     Perform an optimistic concurrency control update on a user counter.
     """
-    for _ in range(10000):
+    for _ in range(10):
         while True:
-            cursor.execute("select counter, version from user_counter where user_id = 1;")
+            cursor.execute(
+                "select counter, version from user_counter where user_id = 1;"
+            )
             counter, version = cursor.fetchone()
             counter += 1
-            cursor.execute(f"""
+            cursor.execute(
+                f"""
             update user_counter set counter = {counter}, version = {version + 1}
             where user_id = 1 and version = {version}
-            """)
+            """
+            )
             connect.commit()
             if cursor.rowcount > 0:
                 break
-    return (f"tread {tread_id} with counter {counter}")
+    return f"tread {tread_id} with counter {counter}"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("")
     experiment(lost_update)
     experiment(lost_update_serializable)
