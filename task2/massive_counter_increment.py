@@ -94,7 +94,7 @@ def init_counter(client: hazelcast.HazelcastClient, func_name: str) -> str:
 
 @hazelcast_connection
 @time_logger
-def map_without_locking(client: hazelcast.HazelcastClient, tread_id: int) -> str:
+def without_locking(client: hazelcast.HazelcastClient, tread_id: int) -> str:
     """
     Counter without locking
     """
@@ -156,7 +156,7 @@ if __name__ == "__main__":
     """
     Run experiments with different locking strategies.
     """
-    experiment(map_without_locking)
+    experiment(without_locking)
 
     experiment(pessimistic_locking)
     experiment(optimistic_locking)
@@ -166,10 +166,15 @@ if __name__ == "__main__":
     experiment(pessimistic_locking)
     experiment(optimistic_locking)
 
-    print("\n\nStart previous container and")
+    print("\n\nStart all containers and")
     input("Press Enter to continue...")
     experiment(iatomiclong)
 
-    print("\n\nStop LEADER container and")
+    print("\n\nStop NOT LEADER container and")
+    input("Press Enter to continue...")
+    experiment(iatomiclong)
+
+    print("\n\nStart NOT LEADER container and")
+    print("Stop LEADER container and")
     input("Press Enter to continue...")
     experiment(iatomiclong)

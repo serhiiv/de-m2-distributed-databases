@@ -6,7 +6,7 @@ services:
             - 5701:5701
         environment:
             - HZ_CLUSTERNAME=counter
-            - HZ_NETWORK_PUBLICADDRESS=192.168.1.10:5701
+            - HZ_NETWORK_PUBLICADDRESS=172.20.0.20:5701
             - JAVA_OPTS=-Dhazelcast.config=/project/hazelcast.yaml
         volumes:
             - "./volume:/project"
@@ -19,7 +19,7 @@ services:
             - 5702:5701
         environment:
             - HZ_CLUSTERNAME=counter
-            - HZ_NETWORK_PUBLICADDRESS=192.168.1.10:5702
+            - HZ_NETWORK_PUBLICADDRESS=172.20.0.20:5702
             - JAVA_OPTS=-Dhazelcast.config=/project/hazelcast.yaml
         volumes:
             - "./volume:/project"
@@ -32,7 +32,7 @@ services:
             - 5703:5701
         environment:
             - HZ_CLUSTERNAME=counter
-            - HZ_NETWORK_PUBLICADDRESS=192.168.1.10:5703
+            - HZ_NETWORK_PUBLICADDRESS=172.20.0.20:5703
             - JAVA_OPTS=-Dhazelcast.config=/project/hazelcast.yaml
         volumes:
             - "./volume:/project"
