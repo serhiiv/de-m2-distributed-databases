@@ -1,0 +1,214 @@
+(.venv) (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ lsmem
+RANGE                                 SIZE  STATE REMOVABLE BLOCK
+0x0000000000000000-0x000000187fffffff  98G online       yes  0-48
+
+Memory block size:         2G
+Total online memory:      98G
+Total offline memory:      0B
+
+(.venv) (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ lscpu | grep -E '^Thread|^Core|^Socket|^CPU\('
+CPU(s):                               32
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            2
+CPU(s) scaling MHz:                   48%
+
+(.venv) (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ python3 massive_counter_increment.py 
+
+
+=== Start experiment
+Function 'without_locking'
+Initialization counter for 'without_locking'.
+experiment counter = 0
+tread 3 with counter 17738 took 110.4022 seconds.
+tread 6 with counter 17786 took 110.6735 seconds.
+tread 9 with counter 17849 took 110.9745 seconds.
+tread 2 with counter 17866 took 111.0716 seconds.
+tread 5 with counter 17904 took 111.2323 seconds.
+tread 4 with counter 18001 took 111.5857 seconds.
+tread 1 with counter 18025 took 111.6682 seconds.
+tread 0 with counter 18059 took 111.7694 seconds.
+tread 7 with counter 18069 took 111.7755 seconds.
+tread 8 with counter 18109 took 111.8421 seconds.
+experiment counter = 18109
+=== The experiment 'without_locking' took 112.2802 seconds.
+
+
+=== Start experiment
+Function 'pessimistic_locking'
+Initialization counter for 'pessimistic_locking'.
+experiment counter = 0
+tread 3 with counter 99991 took 312.9642 seconds.
+tread 0 with counter 99992 took 312.9758 seconds.
+tread 7 with counter 99993 took 312.9729 seconds.
+tread 4 with counter 99994 took 312.9801 seconds.
+tread 2 with counter 99995 took 312.9779 seconds.
+tread 8 with counter 99996 took 312.9797 seconds.
+tread 5 with counter 99997 took 312.9814 seconds.
+tread 9 with counter 99998 took 312.9880 seconds.
+tread 6 with counter 99999 took 312.9888 seconds.
+tread 1 with counter 100000 took 313.0035 seconds.
+experiment counter = 100000
+=== The experiment 'pessimistic_locking' took 313.1629 seconds.
+
+
+=== Start experiment
+Function 'optimistic_locking'
+Initialization counter for 'optimistic_locking'.
+experiment counter = 0
+tread 2 with counter 97634 took 523.4072 seconds.
+tread 6 with counter 98113 took 525.6759 seconds.
+tread 0 with counter 98350 took 526.7975 seconds.
+tread 7 with counter 98424 took 527.0627 seconds.
+tread 3 with counter 98489 took 527.3331 seconds.
+tread 9 with counter 98556 took 527.5491 seconds.
+tread 1 with counter 98630 took 527.7735 seconds.
+tread 5 with counter 98664 took 527.8686 seconds.
+tread 8 with counter 99938 took 530.6850 seconds.
+tread 4 with counter 100000 took 530.8063 seconds.
+experiment counter = 100000
+=== The experiment 'optimistic_locking' took 530.9568 seconds.
+
+
+Stop ANY container end
+Press Enter to continue...
+
+
+=== Start experiment
+Function 'pessimistic_locking'
+Initialization counter for 'pessimistic_locking'.
+experiment counter = 0
+tread 1 with counter 99932 took 316.1611 seconds.
+tread 5 with counter 99936 took 316.1738 seconds.
+tread 6 with counter 99938 took 316.1795 seconds.
+tread 0 with counter 99994 took 316.2477 seconds.
+tread 4 with counter 99995 took 316.2404 seconds.
+tread 2 with counter 99996 took 316.2351 seconds.
+tread 9 with counter 99997 took 316.2362 seconds.
+tread 8 with counter 99998 took 316.2395 seconds.
+tread 7 with counter 99999 took 316.2415 seconds.
+tread 3 with counter 100000 took 316.2474 seconds.
+experiment counter = 100000
+=== The experiment 'pessimistic_locking' took 316.6069 seconds.
+
+
+=== Start experiment
+Function 'optimistic_locking'
+Initialization counter for 'optimistic_locking'.
+experiment counter = 0
+tread 1 with counter 96104 took 508.3790 seconds.
+tread 6 with counter 96276 took 509.2022 seconds.
+tread 2 with counter 96341 took 509.4964 seconds.
+tread 4 with counter 96520 took 510.2458 seconds.
+tread 9 with counter 97042 took 511.9452 seconds.
+tread 5 with counter 97510 took 513.5860 seconds.
+tread 0 with counter 97547 took 513.5885 seconds.
+tread 8 with counter 99703 took 519.4079 seconds.
+tread 7 with counter 99727 took 519.3273 seconds.
+tread 3 with counter 100000 took 519.7856 seconds.
+experiment counter = 100000
+=== The experiment 'optimistic_locking' took 520.0191 seconds.
+
+
+Start all containers and
+Press Enter to continue...
+
+
+=== Start experiment
+Function 'iatomiclong'
+Initialization counter for 'iatomiclong'.
+experiment counter = 0
+tread 9 with counter 99257 took 47.0517 seconds.
+tread 3 with counter 99421 took 47.1543 seconds.
+tread 7 with counter 99557 took 47.2192 seconds.
+tread 8 with counter 99569 took 47.2186 seconds.
+tread 5 with counter 99740 took 47.3091 seconds.
+tread 6 with counter 99772 took 47.3353 seconds.
+tread 0 with counter 99787 took 47.3359 seconds.
+tread 2 with counter 99919 took 47.4226 seconds.
+tread 1 with counter 99987 took 47.4721 seconds.
+tread 4 with counter 100000 took 47.4876 seconds.
+experiment counter = 100000
+=== The experiment 'iatomiclong' took 50.8221 seconds.
+
+
+Stop NOT LEADER container and
+Press Enter to continue...
+
+
+=== Start experiment
+Function 'iatomiclong'
+Initialization counter for 'iatomiclong'.
+experiment counter = 0
+tread 1 with counter 99361 took 47.7527 seconds.
+tread 7 with counter 99493 took 47.9013 seconds.
+tread 0 with counter 99738 took 48.0252 seconds.
+tread 9 with counter 99852 took 48.0704 seconds.
+tread 8 with counter 99878 took 47.9694 seconds.
+tread 3 with counter 99925 took 48.1139 seconds.
+tread 6 with counter 99929 took 48.1126 seconds.
+tread 5 with counter 99965 took 48.1346 seconds.
+tread 4 with counter 99992 took 48.0249 seconds.
+tread 2 with counter 100000 took 48.1652 seconds.
+experiment counter = 100000
+=== The experiment 'iatomiclong' took 48.2905 seconds.
+
+
+Start NOT LEADER container and
+
+
+Stop LEADER container and
+Press Enter to continue...
+
+
+=== Start experiment
+Function 'iatomiclong'
+Traceback (most recent call last):
+  File "/home/vykaliuk/de-m2-distributed-databases/task2/massive_counter_increment.py", line 180, in <module>
+    experiment(iatomiclong)
+  File "/home/vykaliuk/de-m2-distributed-databases/task2/massive_counter_increment.py", line 22, in wrapper
+    output = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vykaliuk/de-m2-distributed-databases/task2/massive_counter_increment.py", line 55, in experiment
+    print(init_counter(func.__name__))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vykaliuk/de-m2-distributed-databases/task2/massive_counter_increment.py", line 40, in wrapper
+    output = func(client, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vykaliuk/de-m2-distributed-databases/task2/massive_counter_increment.py", line 87, in init_counter
+    atomic_long = client.cp_subsystem.get_atomic_long("counter").blocking()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vykaliuk/de-m2-distributed-databases/.venv/lib/python3.12/site-packages/hazelcast/cp.py", line 74, in get_atomic_long
+    return self._proxy_manager.get_or_create(ATOMIC_LONG_SERVICE, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vykaliuk/de-m2-distributed-databases/.venv/lib/python3.12/site-packages/hazelcast/cp.py", line 205, in get_or_create
+    group_id = self._get_group_id(proxy_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vykaliuk/de-m2-distributed-databases/.venv/lib/python3.12/site-packages/hazelcast/cp.py", line 254, in _get_group_id
+    return invocation.future.result()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vykaliuk/de-m2-distributed-databases/.venv/lib/python3.12/site-packages/hazelcast/future.py", line 63, in result
+    re_raise(self._exception, self._traceback)
+  File "/home/vykaliuk/de-m2-distributed-databases/.venv/lib/python3.12/site-packages/hazelcast/util.py", line 450, in re_raise
+    raise exception
+hazelcast.errors.OperationTimeoutError: Request timed out because an error occurred after invocation timeout: Exception from server: com.hazelcast.core.MemberLeftException: Member [172.20.0.20]:5702 - 4370d80b-9e34-48a3-bd20-4b440ea39f1d has left cluster!
+ 	at com.hazelcast.spi.impl.operationservice.impl.Invocation.initInvocationTarget(Invocation.java:288)
+	at com.hazelcast.spi.impl.operationservice.impl.Invocation.doInvoke(Invocation.java:580)
+	at com.hazelcast.spi.impl.operationservice.impl.Invocation$InvocationRetryTask.run(Invocation.java:825)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.lang.Thread.run(Thread.java:1583)
+
+(.venv) (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ 
+

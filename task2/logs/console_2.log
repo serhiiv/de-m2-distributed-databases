@@ -1,0 +1,237 @@
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker compose up -d
+[+] Running 5/5
+ ✔ Network hazelcast-network  Created                                                                                                                                                                                             0.1s 
+ ✔ Container hz-3             Started                                                                                                                                                                                             0.3s 
+ ✔ Container hz-2             Started                                                                                                                                                                                             0.4s 
+ ✔ Container manager          Started                                                                                                                                                                                             0.3s 
+ ✔ Container hz-1             Started                                                                                                                                                                                             0.3s 
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker ps
+CONTAINER ID   IMAGE                               COMMAND                  CREATED         STATUS         PORTS                                                             NAMES
+d4d51fb7715d   hazelcast/management-center:5.4.0   "bash ./bin/mc-start…"   7 seconds ago   Up 7 seconds   8081/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 8443/tcp   manager
+29e3cef405b8   hazelcast/hazelcast:5.4.0           "hz start"               7 seconds ago   Up 7 seconds   0.0.0.0:5701->5701/tcp, [::]:5701->5701/tcp                       hz-1
+a6cefa2cb2bc   hazelcast/hazelcast:5.4.0           "hz start"               7 seconds ago   Up 7 seconds   0.0.0.0:5703->5701/tcp, [::]:5703->5701/tcp                       hz-3
+fe6503d4bcba   hazelcast/hazelcast:5.4.0           "hz start"               7 seconds ago   Up 7 seconds   0.0.0.0:5702->5701/tcp, [::]:5702->5701/tcp                       hz-2
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker logs hz-1
+########################################
+# JAVA=/usr/bin/java
+# JAVA_OPTS=--add-modules java.se --add-exports java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.management/sun.management=ALL-UNNAMED --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED -Dlog4j.shutdownHookEnabled=false -Dhazelcast.logging.shutdown=true -Dhazelcast.logging.type=log4j2 -Dlog4j.configurationFile=file:/opt/hazelcast/config/log4j2.properties -Dhazelcast.config=/opt/hazelcast/config/hazelcast-docker.xml -Djet.custom.lib.dir=/opt/hazelcast/custom-lib -Djava.net.preferIPv4Stack=true -XX:MaxRAMPercentage=80.0 -Dhazelcast.config=/project/hazelcast.yaml
+# CLASSPATH=/opt/hazelcast/*:/opt/hazelcast/lib:/opt/hazelcast/lib/*:/opt/hazelcast/bin/user-lib:/opt/hazelcast/bin/user-lib/*
+########################################
+2025-03-06 19:09:54,968 [ INFO] [main] [c.h.i.c.AbstractConfigLocator]: Loading configuration '/project/hazelcast.yaml' from System property 'hazelcast.config'
+2025-03-06 19:09:54,973 [ INFO] [main] [c.h.i.c.AbstractConfigLocator]: Using configuration file at /project/hazelcast.yaml
+2025-03-06 19:09:55,790 [ INFO] [main] [c.h.i.c.o.ExternalConfigurationOverride]: Detected external configuration entries in environment variables: [hazelcast.network.publicaddress=172.20.0.20:5701,hazelcast.clustername=counter]
+2025-03-06 19:09:55,890 [ INFO] [main] [c.h.i.AddressPicker]: [LOCAL] [counter] [5.4.0] Using public address: [172.20.0.20]:5701
+2025-03-06 19:09:55,934 [ INFO] [main] [c.h.s.logo]: [172.20.0.20]:5701 [counter] [5.4.0] 
+	o    o     o     o---o   o--o o      o---o     o     o----o o--o--o
+	|    |    / \       /         |     /         / \    |         |   
+	o----o       o     o   o----o |    o             o   o----o    |   
+	|    |  *     \   /           |     \       *     \       |    |   
+	o    o *       o o---o   o--o o----o o---o *       o o----o    o   
+2025-03-06 19:09:55,934 [ INFO] [main] [c.h.system]: [172.20.0.20]:5701 [counter] [5.4.0] Copyright (c) 2008-2024, Hazelcast, Inc. All Rights Reserved.
+2025-03-06 19:09:55,939 [ INFO] [main] [c.h.system]: [172.20.0.20]:5701 [counter] [5.4.0] Hazelcast Platform 5.4.0 (20240415) starting at [172.20.0.20]:5701
+2025-03-06 19:09:55,939 [ INFO] [main] [c.h.system]: [172.20.0.20]:5701 [counter] [5.4.0] Cluster name: counter
+2025-03-06 19:09:55,940 [ INFO] [main] [c.h.system]: [172.20.0.20]:5701 [counter] [5.4.0] Integrity Checker is disabled. Fail-fast on corrupted executables will not be performed. For more information, see the documentation for Integrity Checker.
+2025-03-06 19:09:55,943 [ INFO] [main] [c.h.system]: [172.20.0.20]:5701 [counter] [5.4.0] The Jet engine is disabled.
+To enable the Jet engine on the members, do one of the following:
+  - Change member config using Java API: config.getJetConfig().setEnabled(true)
+  - Change XML/YAML configuration property: Set hazelcast.jet.enabled to true
+  - Add system property: -Dhz.jet.enabled=true (for Hazelcast embedded, works only when loading config via Config.load)
+  - Add environment variable: HZ_JET_ENABLED=true (recommended when running container image. For Hazelcast embedded, works only when loading config via Config.load)
+2025-03-06 19:09:57,062 [ INFO] [main] [c.h.s.security]: [172.20.0.20]:5701 [counter] [5.4.0] Enable DEBUG/FINE log level for log category com.hazelcast.system.security  or use -Dhazelcast.security.recommendations system property to see 🔒 security recommendations and the status of current config.
+2025-03-06 19:09:57,177 [ INFO] [main] [c.h.i.i.Node]: [172.20.0.20]:5701 [counter] [5.4.0] Using Multicast discovery
+2025-03-06 19:09:57,186 [ INFO] [main] [c.h.c.CPSubsystem]: [172.20.0.20]:5701 [counter] [5.4.0] CP Subsystem is enabled with 3 members.
+2025-03-06 19:09:57,514 [ INFO] [main] [c.h.i.d.Diagnostics]: [172.20.0.20]:5701 [counter] [5.4.0] Diagnostics disabled. To enable add -Dhazelcast.diagnostics.enabled=true to the JVM arguments.
+2025-03-06 19:09:57,525 [ INFO] [main] [c.h.c.LifecycleService]: [172.20.0.20]:5701 [counter] [5.4.0] [172.20.0.20]:5701 is STARTING
+2025-03-06 19:09:59,733 [ INFO] [main] [c.h.i.c.ClusterService]: [172.20.0.20]:5701 [counter] [5.4.0] 
+
+Members {size:1, ver:1} [
+	Member [172.20.0.20]:5701 - deb343d2-a4ae-40bb-a8ed-8b6d768934cf this
+]
+
+2025-03-06 19:09:59,757 [ INFO] [main] [c.h.c.LifecycleService]: [172.20.0.20]:5701 [counter] [5.4.0] [172.20.0.20]:5701 is STARTED
+2025-03-06 19:09:59,906 [ INFO] [hz.stupefied_shtern.IO.thread-in-0] [c.h.i.s.t.TcpServerConnection]: [172.20.0.20]:5701 [counter] [5.4.0] Initialized new cluster connection between /172.19.0.2:5701 and /172.19.0.1:42510
+2025-03-06 19:09:59,949 [ INFO] [hz.stupefied_shtern.IO.thread-in-1] [c.h.i.s.t.TcpServerConnection]: [172.20.0.20]:5701 [counter] [5.4.0] Initialized new cluster connection between /172.19.0.2:5701 and /172.19.0.1:42526
+2025-03-06 19:09:59,991 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.i.c.ClusterService]: [172.20.0.20]:5701 [counter] [5.4.0] 
+
+Members {size:2, ver:2} [
+	Member [172.20.0.20]:5701 - deb343d2-a4ae-40bb-a8ed-8b6d768934cf this
+	Member [172.20.0.20]:5702 - 4370d80b-9e34-48a3-bd20-4b440ea39f1d
+]
+
+2025-03-06 19:10:00,037 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.i.c.ClusterService]: [172.20.0.20]:5701 [counter] [5.4.0] 
+
+Members {size:3, ver:3} [
+	Member [172.20.0.20]:5701 - deb343d2-a4ae-40bb-a8ed-8b6d768934cf this
+	Member [172.20.0.20]:5702 - 4370d80b-9e34-48a3-bd20-4b440ea39f1d
+	Member [172.20.0.20]:5703 - 297721ce-2df0-46af-b757-c96c188c79b5
+]
+
+2025-03-06 19:10:00,513 [ INFO] [hz.stupefied_shtern.cached.thread-3] [c.h.c.i.RaftInvocationManager]: [172.20.0.20]:5701 [counter] [5.4.0] Replaced CPMembersContainer{version=CPMembersVersion{groupIdSeed=0, version=-1}, members=[]} with CPMembersContainer{version=CPMembersVersion{groupIdSeed=0, version=0}, members=[CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701}, CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}, CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}]}
+2025-03-06 19:10:00,529 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.i.p.i.PartitionStateManager]: [172.20.0.20]:5701 [counter] [5.4.0] Initializing cluster partition table arrangement...
+2025-03-06 19:10:00,542 [ INFO] [hz.stupefied_shtern.cached.thread-3] [c.h.c.i.RaftService]: [172.20.0.20]:5701 [counter] [5.4.0] RaftNode[CPGroupId{name='METADATA', seed=0, groupId=0}] is created with [RaftEndpoint{uuid='deb343d2-a4ae-40bb-a8ed-8b6d768934cf'}, RaftEndpoint{uuid='297721ce-2df0-46af-b757-c96c188c79b5'}, RaftEndpoint{uuid='4370d80b-9e34-48a3-bd20-4b440ea39f1d'}]
+2025-03-06 19:10:00,629 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.RaftNode(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] Status is set to: ACTIVE
+2025-03-06 19:10:02,922 [ WARN] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.RaftNodeImpl$LeaderFailureDetectionTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] We are FOLLOWER and there is no current leader. Will start new election round...
+2025-03-06 19:10:02,946 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.t.PreVoteTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] Pre-vote started for next term: 1, last log index: 0, last log term: 0
+2025-03-06 19:10:02,947 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.RaftNode(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] 
+
+CP Group Members {groupId: METADATA(0), size:3, term:0, logIndex:0} [
+	CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701} - FOLLOWER this
+	CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}
+	CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}
+]
+
+2025-03-06 19:10:02,981 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.h.PreVoteResponseHandlerTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] Pre-vote granted from RaftEndpoint{uuid='4370d80b-9e34-48a3-bd20-4b440ea39f1d'} for term: 1, number of votes: 2, majority: 2
+2025-03-06 19:10:02,982 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.h.PreVoteResponseHandlerTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] We have the majority during pre-vote phase. Let's start real election!
+2025-03-06 19:10:02,984 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.t.LeaderElectionTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] Leader election started for term: 1, last log index: 0, last log term: 0
+2025-03-06 19:10:02,984 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.RaftNode(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] 
+
+CP Group Members {groupId: METADATA(0), size:3, term:1, logIndex:0} [
+	CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701} - CANDIDATE this
+	CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}
+	CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}
+]
+
+2025-03-06 19:10:02,993 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.h.PreVoteResponseHandlerTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] Ignored PreVoteResponse{voter=RaftEndpoint{uuid='297721ce-2df0-46af-b757-c96c188c79b5'}, term=1, granted=true}. We are not FOLLOWER anymore.
+2025-03-06 19:10:02,997 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.h.VoteResponseHandlerTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] Vote granted from RaftEndpoint{uuid='4370d80b-9e34-48a3-bd20-4b440ea39f1d'} for term: 1, number of votes: 2, majority: 2
+2025-03-06 19:10:02,997 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.h.VoteResponseHandlerTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] We are the LEADER!
+2025-03-06 19:10:03,000 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.RaftNode(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] 
+
+CP Group Members {groupId: METADATA(0), size:3, term:1, logIndex:0} [
+	CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701} - LEADER this
+	CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}
+	CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}
+]
+
+2025-03-06 19:10:03,002 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.r.i.h.VoteResponseHandlerTask(METADATA)]: [172.20.0.20]:5701 [counter] [5.4.0] Ignored VoteResponse{voter=RaftEndpoint{uuid='297721ce-2df0-46af-b757-c96c188c79b5'}, term=1, granted=true}. We are not CANDIDATE anymore.
+2025-03-06 19:10:03,827 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.RaftInvocationManager]: [172.20.0.20]:5701 [counter] [5.4.0] Replaced CPMembersContainer{version=CPMembersVersion{groupIdSeed=0, version=0}, members=[CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701}, CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}, CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}]} with CPMembersContainer{version=CPMembersVersion{groupIdSeed=0, version=2}, members=[CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701}, CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}, CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}]}
+2025-03-06 19:10:03,832 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.RaftInvocationManager]: [172.20.0.20]:5701 [counter] [5.4.0] Replaced CPMembersContainer{version=CPMembersVersion{groupIdSeed=0, version=2}, members=[CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701}, CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}, CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}]} with CPMembersContainer{version=CPMembersVersion{groupIdSeed=0, version=3}, members=[CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701}, CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}, CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}]}
+2025-03-06 19:10:03,848 [ INFO] [hz.stupefied_shtern.partition-operation.thread-0] [c.h.c.i.RaftInvocationManager]: [172.20.0.20]:5701 [counter] [5.4.0] Replaced CPMembersContainer{version=CPMembersVersion{groupIdSeed=0, version=3}, members=[CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701}, CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}, CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}]} with CPMembersContainer{version=CPMembersVersion{groupIdSeed=0, version=4}, members=[CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701}, CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}, CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}]}
+2025-03-06 19:10:03,850 [ INFO] [hz.stupefied_shtern.cached.thread-3] [c.h.c.i.MetadataRaftGroupManager]: [172.20.0.20]:5701 [counter] [5.4.0] CP Subsystem is initialized with: [CPMember{uuid=deb343d2-a4ae-40bb-a8ed-8b6d768934cf, address=[172.20.0.20]:5701}, CPMember{uuid=297721ce-2df0-46af-b757-c96c188c79b5, address=[172.20.0.20]:5703}, CPMember{uuid=4370d80b-9e34-48a3-bd20-4b440ea39f1d, address=[172.20.0.20]:5702}]
+2025-03-06 19:10:17,644 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=3, /172.19.0.2:5701->/172.19.0.1:34798, qualifier=null, endpoint=[172.19.0.1]:34798, remoteUuid=0793f6db-fb6a-488a-8ea8-a45afd0b4ef3, alive=true, connectionType=MCJVM, planeIndex=-1], successfully authenticated, clientUuid: 0793f6db-fb6a-488a-8ea8-a45afd0b4ef3, client name: MC-Client-counter, client version: 5.4.0
+2025-03-06 19:10:22,240 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=4, /172.19.0.2:5701->/172.20.0.20:44356, qualifier=null, endpoint=[172.20.0.20]:44356, remoteUuid=caa39686-ad05-4bd5-ba7c-3a57bdf5bb80, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: caa39686-ad05-4bd5-ba7c-3a57bdf5bb80, client name: hz.client_0, client version: 5.4.0
+2025-03-06 19:10:22,509 [ INFO] [hz.stupefied_shtern.IO.thread-in-3] [c.h.i.s.t.TcpServerConnection]: [172.20.0.20]:5701 [counter] [5.4.0] Connection[id=4, /172.19.0.2:5701->/172.20.0.20:44356, qualifier=null, endpoint=[172.20.0.20]:44356, remoteUuid=caa39686-ad05-4bd5-ba7c-3a57bdf5bb80, alive=false, connectionType=PYH, planeIndex=-1] closed. Reason: Connection closed by the other side
+2025-03-06 19:10:22,520 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=5, /172.19.0.2:5701->/172.20.0.20:44364, qualifier=null, endpoint=[172.20.0.20]:44364, remoteUuid=c23e129c-3a17-4309-9c8c-af4fa2bdca76, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: c23e129c-3a17-4309-9c8c-af4fa2bdca76, client name: hz.client_1, client version: 5.4.0
+2025-03-06 19:10:22,523 [ INFO] [hz.stupefied_shtern.event-2] [c.h.c.i.ClientEndpointManager]: [172.20.0.20]:5701 [counter] [5.4.0] Destroying ClientEndpoint{connection=Connection[id=4, /172.19.0.2:5701->/172.20.0.20:44356, qualifier=null, endpoint=[172.20.0.20]:44356, remoteUuid=caa39686-ad05-4bd5-ba7c-3a57bdf5bb80, alive=false, connectionType=PYH, planeIndex=-1], clientUuid=caa39686-ad05-4bd5-ba7c-3a57bdf5bb80, clientName=hz.client_0, authenticated=true, clientVersion=5.4.0, creationTime=1741288222240, latest clientAttributes=null, labels=[]}
+2025-03-06 19:10:22,547 [ INFO] [hz.stupefied_shtern.IO.thread-in-0] [c.h.i.s.t.TcpServerConnection]: [172.20.0.20]:5701 [counter] [5.4.0] Connection[id=5, /172.19.0.2:5701->/172.20.0.20:44364, qualifier=null, endpoint=[172.20.0.20]:44364, remoteUuid=c23e129c-3a17-4309-9c8c-af4fa2bdca76, alive=false, connectionType=PYH, planeIndex=-1] closed. Reason: Connection closed by the other side
+2025-03-06 19:10:22,548 [ INFO] [hz.stupefied_shtern.event-5] [c.h.c.i.ClientEndpointManager]: [172.20.0.20]:5701 [counter] [5.4.0] Destroying ClientEndpoint{connection=Connection[id=5, /172.19.0.2:5701->/172.20.0.20:44364, qualifier=null, endpoint=[172.20.0.20]:44364, remoteUuid=c23e129c-3a17-4309-9c8c-af4fa2bdca76, alive=false, connectionType=PYH, planeIndex=-1], clientUuid=c23e129c-3a17-4309-9c8c-af4fa2bdca76, clientName=hz.client_1, authenticated=true, clientVersion=5.4.0, creationTime=1741288222519, latest clientAttributes=null, labels=[]}
+2025-03-06 19:10:22,571 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=6, /172.19.0.2:5701->/172.19.0.1:34808, qualifier=null, endpoint=[172.19.0.1]:34808, remoteUuid=a1367c7e-5cc7-4309-bce6-0fe72d6bdb3b, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: a1367c7e-5cc7-4309-bce6-0fe72d6bdb3b, client name: hz.client_7, client version: 5.4.0
+2025-03-06 19:10:22,572 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=7, /172.19.0.2:5701->/172.20.0.20:44372, qualifier=null, endpoint=[172.20.0.20]:44372, remoteUuid=a9e75b7d-7d4f-4c2a-9a3c-8abc9972faf7, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: a9e75b7d-7d4f-4c2a-9a3c-8abc9972faf7, client name: hz.client_2, client version: 5.4.0
+2025-03-06 19:10:22,572 [ INFO] [hz.stupefied_shtern.generic-operation.thread-8] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=9, /172.19.0.2:5701->/172.20.0.20:44394, qualifier=null, endpoint=[172.20.0.20]:44394, remoteUuid=0dee79f5-609f-4342-a3af-7ca543587a14, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: 0dee79f5-609f-4342-a3af-7ca543587a14, client name: hz.client_3, client version: 5.4.0
+2025-03-06 19:10:22,576 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=8, /172.19.0.2:5701->/172.20.0.20:44384, qualifier=null, endpoint=[172.20.0.20]:44384, remoteUuid=348b24a6-0579-41c8-b23b-3823c266576a, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: 348b24a6-0579-41c8-b23b-3823c266576a, client name: hz.client_6, client version: 5.4.0
+2025-03-06 19:10:22,576 [ INFO] [hz.stupefied_shtern.generic-operation.thread-11] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=10, /172.19.0.2:5701->/172.20.0.20:44402, qualifier=null, endpoint=[172.20.0.20]:44402, remoteUuid=b8ede430-a902-4cc3-93a0-7aabaaa9c4c2, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: b8ede430-a902-4cc3-93a0-7aabaaa9c4c2, client name: hz.client_4, client version: 5.4.0
+2025-03-06 19:10:22,580 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=12, /172.19.0.2:5701->/172.20.0.20:44410, qualifier=null, endpoint=[172.20.0.20]:44410, remoteUuid=7e0bdd6e-5875-4591-adb9-5acbfc555b1a, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: 7e0bdd6e-5875-4591-adb9-5acbfc555b1a, client name: hz.client_8, client version: 5.4.0
+2025-03-06 19:10:22,580 [ INFO] [hz.stupefied_shtern.generic-operation.thread-12] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=11, /172.19.0.2:5701->/172.20.0.20:44408, qualifier=null, endpoint=[172.20.0.20]:44408, remoteUuid=ab3e21c5-f94a-4e09-9610-1b5c0635a8f6, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: ab3e21c5-f94a-4e09-9610-1b5c0635a8f6, client name: hz.client_5, client version: 5.4.0
+2025-03-06 19:10:22,592 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=13, /172.19.0.2:5701->/172.20.0.20:44426, qualifier=null, endpoint=[172.20.0.20]:44426, remoteUuid=a5f0479b-ad76-4198-9e0d-2ddc1ffa8f3b, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: a5f0479b-ad76-4198-9e0d-2ddc1ffa8f3b, client name: hz.client_9, client version: 5.4.0
+2025-03-06 19:10:22,597 [ INFO] [hz.stupefied_shtern.priority-generic-operation.thread-0] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=15, /172.19.0.2:5701->/172.20.0.20:44440, qualifier=null, endpoint=[172.20.0.20]:44440, remoteUuid=f31c492e-678d-4911-a222-4d6ffe44d480, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: f31c492e-678d-4911-a222-4d6ffe44d480, client name: hz.client_10, client version: 5.4.0
+2025-03-06 19:10:22,598 [ INFO] [hz.stupefied_shtern.generic-operation.thread-1] [c.h.c.i.p.t.AuthenticationMessageTask]: [172.20.0.20]:5701 [counter] [5.4.0] Received auth from Connection[id=14, /172.19.0.2:5701->/172.19.0.1:34812, qualifier=null, endpoint=[172.19.0.1]:34812, remoteUuid=a4d41978-0398-4bc2-bccf-abe297c1f3ee, alive=true, connectionType=PYH, planeIndex=-1], successfully authenticated, clientUuid: a4d41978-0398-4bc2-bccf-abe297c1f3ee, client name: hz.client_11, client version: 5.4.0
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker ps
+CONTAINER ID   IMAGE                               COMMAND                  CREATED         STATUS         PORTS                                                             NAMES
+d4d51fb7715d   hazelcast/management-center:5.4.0   "bash ./bin/mc-start…"   9 minutes ago   Up 9 minutes   8081/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 8443/tcp   manager
+29e3cef405b8   hazelcast/hazelcast:5.4.0           "hz start"               9 minutes ago   Up 9 minutes   0.0.0.0:5701->5701/tcp, [::]:5701->5701/tcp                       hz-1
+a6cefa2cb2bc   hazelcast/hazelcast:5.4.0           "hz start"               9 minutes ago   Up 9 minutes   0.0.0.0:5703->5701/tcp, [::]:5703->5701/tcp                       hz-3
+fe6503d4bcba   hazelcast/hazelcast:5.4.0           "hz start"               9 minutes ago   Up 9 minutes   0.0.0.0:5702->5701/tcp, [::]:5702->5701/tcp                       hz-2
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker stop hz-3
+hz-3
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker ps
+CONTAINER ID   IMAGE                               COMMAND                  CREATED          STATUS          PORTS                                                             NAMES
+d4d51fb7715d   hazelcast/management-center:5.4.0   "bash ./bin/mc-start…"   16 minutes ago   Up 16 minutes   8081/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 8443/tcp   manager
+29e3cef405b8   hazelcast/hazelcast:5.4.0           "hz start"               16 minutes ago   Up 16 minutes   0.0.0.0:5701->5701/tcp, [::]:5701->5701/tcp                       hz-1
+fe6503d4bcba   hazelcast/hazelcast:5.4.0           "hz start"               16 minutes ago   Up 16 minutes   0.0.0.0:5702->5701/tcp, [::]:5702->5701/tcp                       hz-2
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker start hz-3
+hz-3
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker ps
+CONTAINER ID   IMAGE                               COMMAND                  CREATED          STATUS          PORTS                                                             NAMES
+d4d51fb7715d   hazelcast/management-center:5.4.0   "bash ./bin/mc-start…"   30 minutes ago   Up 30 minutes   8081/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 8443/tcp   manager
+29e3cef405b8   hazelcast/hazelcast:5.4.0           "hz start"               30 minutes ago   Up 30 minutes   0.0.0.0:5701->5701/tcp, [::]:5701->5701/tcp                       hz-1
+a6cefa2cb2bc   hazelcast/hazelcast:5.4.0           "hz start"               30 minutes ago   Up 2 seconds    0.0.0.0:5703->5701/tcp, [::]:5703->5701/tcp                       hz-3
+fe6503d4bcba   hazelcast/hazelcast:5.4.0           "hz start"               30 minutes ago   Up 30 minutes   0.0.0.0:5702->5701/tcp, [::]:5702->5701/tcp                       hz-2
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker stop hz-3
+hz-3
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker ps
+CONTAINER ID   IMAGE                               COMMAND                  CREATED          STATUS          PORTS                                                             NAMES
+d4d51fb7715d   hazelcast/management-center:5.4.0   "bash ./bin/mc-start…"   32 minutes ago   Up 32 minutes   8081/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 8443/tcp   manager
+29e3cef405b8   hazelcast/hazelcast:5.4.0           "hz start"               32 minutes ago   Up 32 minutes   0.0.0.0:5701->5701/tcp, [::]:5701->5701/tcp                       hz-1
+fe6503d4bcba   hazelcast/hazelcast:5.4.0           "hz start"               32 minutes ago   Up 32 minutes   0.0.0.0:5702->5701/tcp, [::]:5702->5701/tcp                       hz-2
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker start hz-3
+hz-3
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker stop hz-1
+hz-1
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker ps
+CONTAINER ID   IMAGE                               COMMAND                  CREATED          STATUS          PORTS                                                             NAMES
+d4d51fb7715d   hazelcast/management-center:5.4.0   "bash ./bin/mc-start…"   33 minutes ago   Up 33 minutes   8081/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 8443/tcp   manager
+a6cefa2cb2bc   hazelcast/hazelcast:5.4.0           "hz start"               33 minutes ago   Up 9 seconds    0.0.0.0:5703->5701/tcp, [::]:5703->5701/tcp                       hz-3
+fe6503d4bcba   hazelcast/hazelcast:5.4.0           "hz start"               33 minutes ago   Up 33 minutes   0.0.0.0:5702->5701/tcp, [::]:5702->5701/tcp                       hz-2
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker compose stop
+[+] Stopping 4/4
+ ✔ Container hz-2     Stopped                                                                                0.8s 
+ ✔ Container manager  Stopped                                                                                2.5s 
+ ✔ Container hz-3     Stopped                                                                                0.9s 
+ ✔ Container hz-1     Stopped                                                                                0.0s 
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ mkdir logs
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker logs hz-1 > logs/hz-1.log
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker logs hz-2 > logs/hz-2.log
+docker logs hz-3 > logs/hz-3.log
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ docker compose down
+[+] Running 5/5
+ ✔ Container hz-3             Removed                                                                        0.0s 
+ ✔ Container manager          Removed                                                                        0.0s 
+ ✔ Container hz-1             Removed                                                                        0.0s 
+ ✔ Container hz-2             Removed                                                                        0.0s 
+ ✔ Network hazelcast-network  Removed                                                                        0.2s 
+
+ (main)
+ls-8680:~/de-m2-distributed-databases/task2
+$ 
