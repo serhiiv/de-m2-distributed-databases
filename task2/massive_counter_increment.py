@@ -68,7 +68,8 @@ def experiment(func) -> str:
 @hazelcast_connection
 def get_counter(client: hazelcast.HazelcastClient, func_name: str) -> str:
     if func_name == "iatomiclong":
-        pass
+        atomic_long = client.cp_subsystem.get_atomic_long("counter").blocking()
+        counter = atomic_long.get()
     else:
         counter_map = client.get_map("experiment").blocking()
         counter = counter_map.get("counter")
@@ -78,7 +79,8 @@ def get_counter(client: hazelcast.HazelcastClient, func_name: str) -> str:
 @hazelcast_connection
 def init_counter(client: hazelcast.HazelcastClient, func_name: str) -> str:
     if func_name == "iatomiclong":
-        pass
+        atomic_long = client.cp_subsystem.get_atomic_long("counter").blocking()
+        atomic_long.set(0)
     else:
         init_map = client.get_map("experiment")
         init_map.set("counter", 0).result()
@@ -131,19 +133,17 @@ def optimistic_locking(client: hazelcast.HazelcastClient, tread_id: int) -> str:
 @hazelcast_connection
 @time_logger
 def iatomiclong(client: hazelcast.HazelcastClient, tread_id: int) -> str:
-    work_map = client.g
-    counter = work_map.get("counter")
+    atomic_long = client.cp_subsystem.get_atomic_long("counter").blocking()
     for _ in range(REPEAT):
-        counter += 1
-    work_map.put("counter", counter)
+        counter = atomic_long.increment_and_get()
     return f"tread {tread_id} with counter {counter}"
 
 
 if __name__ == "__main__":
 
-    experiment(map_without_locking)
+    # experiment(map_without_locking)
 
-    experiment(pessimistic_locking)
-    experiment(optimistic_locking)
+    # experiment(pessimistic_locking)
+    # experiment(optimistic_locking)
 
-    # experiment(iatomiclong)
+    experiment(iatomiclong)
