@@ -2,4 +2,4 @@
 psycopg2-binary
 
 # task2
-hazelcast-python-client
+hazelcast-python-client==5.4.0
