@@ -5,14 +5,12 @@ MATCH (n) DETACH DELETE n;
 // Імпорт переглядів
 LOAD CSV WITH HEADERS FROM 'file:///views.csv' AS row
 MERGE (i:Item {name: row.Item, price: toFloat(row.price)})
-WITH i, row
 MERGE (c:Customer {name: row.Customer})
 MERGE (c)-[:VIEW]->(i);
 
 // Імпорт покупок
 LOAD CSV WITH HEADERS FROM 'file:///orders.csv' AS row
 MERGE (i:Item {name: row.Item, price: toFloat(row.price)})
-WITH i, row
 MERGE (c:Customer {name: row.Customer})
 MERGE (o:Order {number: toInteger(row.Order)})
 MERGE (c)-[:MADE]->(o)

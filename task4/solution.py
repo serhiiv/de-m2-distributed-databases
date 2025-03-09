@@ -46,6 +46,42 @@ def neo4j_connection(func):
 
 
 @neo4j_connection
+def load_database(session) -> str:
+    session.run(
+        """
+        MATCH (n) DETACH DELETE n;
+        """
+    )
+    session.run(
+        """
+        LOAD CSV WITH HEADERS FROM 'file:///views.csv' AS row
+        MERGE (i:Item {name: row.Item, price: toFloat(row.price)})
+        MERGE (c:Customer {name: row.Customer})
+        MERGE (c)-[:VIEW]->(i);
+        """
+    )
+    session.run(
+        """
+        LOAD CSV WITH HEADERS FROM 'file:///orders.csv' AS row
+        MERGE (i:Item {name: row.Item, price: toFloat(row.price)})
+        MERGE (c:Customer {name: row.Customer})
+        MERGE (o:Order {number: toInteger(row.Order)})
+        MERGE (c)-[:MADE]->(o)
+        MERGE (o)-[:BUY]->(i);
+        """
+    )
+    session.run(
+        """
+        MATCH (c:Customer)-[v:VIEW]->(i:Item)
+        WHERE exists((c)-[:MADE]->(:Order)-[:BUY]->(i))
+        DELETE v
+        RETURN count(v);
+        """
+    )
+    return "database loaded"
+
+
+@neo4j_connection
 def get_random_item(session) -> str:
     """
     Initialize counter
@@ -120,4 +156,5 @@ def experiment() -> str:
 
 
 if __name__ == "__main__":
+    print(load_database())
     experiment()
