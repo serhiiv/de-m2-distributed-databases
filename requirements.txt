@@ -3,3 +3,6 @@ psycopg2-binary
 
 # task2
 hazelcast-python-client==5.4.0
+
+# task4
+neo4j
