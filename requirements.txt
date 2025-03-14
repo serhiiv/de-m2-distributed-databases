@@ -6,3 +6,6 @@ hazelcast-python-client==5.4.0
 
 # task4
 neo4j
+
+# task6
+pymongo
