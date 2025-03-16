@@ -1,0 +1,57 @@
+name: mongo
+
+services:
+  prima:
+    container_name: mongo-prima
+    image: mongo:latest
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017", "--keyFile", "/etc/mongodb/pki/keyfile"]
+    ports:
+      - 27017:27017
+    volumes:
+      - ${PWD}/rs_keyfile:/etc/mongodb/pki/keyfile
+      - ${PWD}/initiate_replica_set.mongodb:/tmp/initiate_replica_set.mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    post_start:
+      - command: bash -c "sleep 10 && mongosh -u user -p password -f /tmp/initiate_replica_set.mongodb"
+        working_dir: /
+        user: root
+        privileged: true
+    depends_on:
+      - rs1
+      - rs2
+    networks:
+      mongo-cluster:
+         
+  rs1:
+    container_name: mongo-rs1
+    image: mongo:latest
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018", "--keyFile", "/etc/mongodb/pki/keyfile"]
+    ports:
+      - 27018:27018
+    volumes:
+      - ${PWD}/rs_keyfile:/etc/mongodb/pki/keyfile
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      mongo-cluster:
+
+  rs2:
+    container_name: mongo-rs2
+    image: mongo:latest
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27019", "--keyFile", "/etc/mongodb/pki/keyfile"]
+    ports:
+      - 27019:27019
+    volumes:
+      - ${PWD}/rs_keyfile:/etc/mongodb/pki/keyfile
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      mongo-cluster:
+
+networks:
+  mongo-cluster:
+    name: mongo-network
