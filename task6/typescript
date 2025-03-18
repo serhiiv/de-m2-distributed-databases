@@ -1,0 +1,149 @@
+Script started on 2025-03-19 00:09:02+02:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="231" LINES="56"]
+[?2004h
+[31m[32m (main)[0m(write log)
+hp:[33m~/github/de-m2-distributed-databases/task6
+$[0m bash -v replication_test.sh 
+[?2004l# Replica Set Elections
+
+# view primary node
+mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0" --eval \
+'rs.hello()' | grep primary
+  primary: '192.168.1.10:27017',
+
+
+# create collection items
+mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0" --eval \
+'use("task6"); db.items.drop(); db.createCollection("items");'
+]0;mongosh mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0&serverSelectionTimeoutMS=2000{ ok: [33m1[39m }
+
+
+# Try to write with one node down and write concern level 3 
+# and infinite timeout. Try to turn on the down node during the timeout.
+# docker ps
+
+# disconnect the secondary node - mongo2
+docker network disconnect mongoCluster mongo2
+
+
+# view work nodes
+docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                                        NAMES
+5f6f83ce192d   mongo:latest   "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes                                                                mongo2
+071294bd46e1   mongo:latest   "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   27017/tcp, 0.0.0.0:27019->27019/tcp, [::]:27019->27019/tcp   mongo3
+39a94d3ac9dd   mongo:latest   "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   0.0.0.0:27017->27017/tcp, [::]:27017->27017/tcp              mongo1
+
+
+# after 20 seconds, connect the secondary node - mongo 2
+(sleep 20 && docker network connect mongoCluster mongo2) &
+
+
+# add item ThinkPad X1 
+mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0" --eval \
+'use("task6"); db.items.insertOne({"model": "ThinkPad X1" }, { writeConcern: { w: 3, wtimeout: 0 } });'
+]0;mongosh mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0&serverSelectionTimeoutMS=2000{
+  acknowledged: [33mtrue[39m,
+  insertedId: ObjectId([32m'67d9ef1d32fcc506ae6b140b'[39m)
+}
+
+
+# Like the previous point, set a finite timeout and wait for it to expire.
+# Then, check if the data has been written and is available 
+# for reading with the readConcern level majority.
+
+# disconnect secondary node - mongo2
+docker network disconnect mongoCluster mongo2
+
+
+# view work nodes
+docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                                        NAMES
+5f6f83ce192d   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes                                                                mongo2
+071294bd46e1   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   27017/tcp, 0.0.0.0:27019->27019/tcp, [::]:27019->27019/tcp   mongo3
+39a94d3ac9dd   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   0.0.0.0:27017->27017/tcp, [::]:27017->27017/tcp              mongo1
+
+
+# add item ThinkPad X2
+mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0" --eval \
+'use("task6"); db.items.insertOne({ "model": "ThinkPad X2" }, { writeConcern: { w: 3, wtimeout: 5000 } });'
+]0;mongosh mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0&serverSelectionTimeoutMS=2000MongoWriteConcernError: waiting for replication timed out
+
+
+# reading data with the readConcern level majority
+mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0" --eval \
+'use("task6"); db.items.find({}).readConcern("majority");'
+]0;mongosh mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0&serverSelectionTimeoutMS=2000[
+  { _id: ObjectId([32m'67d9ef1d32fcc506ae6b140b'[39m), model: [32m'ThinkPad X1'[39m },
+  { _id: ObjectId([32m'67d9ef3450a26553796b140b'[39m), model: [32m'ThinkPad X2'[39m }
+]
+
+
+# connect secondary node - mongo2
+docker network connect mongoCluster mongo2
+
+
+# Disable the current primary node and demonstrate the primary node re-election.
+# After the old primary node is back up, demonstrate 
+# that new data that appeared during its downtime is being replicated.
+
+# disconnect the primary node - mongo1
+docker network disconnect mongoCluster mongo1
+
+
+# view work nodes
+docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                                        NAMES
+5f6f83ce192d   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   27017/tcp, 0.0.0.0:27018->27018/tcp, [::]:27018->27018/tcp   mongo2
+071294bd46e1   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   27017/tcp, 0.0.0.0:27019->27019/tcp, [::]:27019->27019/tcp   mongo3
+39a94d3ac9dd   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes                                                                mongo1
+
+
+# wait election
+sleep 20
+
+
+# view primary node
+mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0" --eval \
+'rs.hello()' | grep primary
+  primary: '192.168.1.10:27019',
+
+
+# add item ThinkPad X3
+mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0" --eval \
+'use("task6"); db.items.insertOne({ "model": "ThinkPad X3" });'
+]0;mongosh mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0&serverSelectionTimeoutMS=2000{
+  acknowledged: [33mtrue[39m,
+  insertedId: ObjectId([32m'67d9ef4f03ca6622ee6b140b'[39m)
+}
+
+
+# connect the primary node - mongo1
+docker network connect mongoCluster mongo1
+
+
+# view work nodes
+docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                                        NAMES
+5f6f83ce192d   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   27017/tcp, 0.0.0.0:27018->27018/tcp, [::]:27018->27018/tcp   mongo2
+071294bd46e1   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   27017/tcp, 0.0.0.0:27019->27019/tcp, [::]:27019->27019/tcp   mongo3
+39a94d3ac9dd   mongo:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   0.0.0.0:27017->27017/tcp, [::]:27017->27017/tcp              mongo1
+
+
+# wait replication
+sleep 2
+
+
+# check replicated data
+mongosh "mongodb://localhost:27017/" --eval \
+'use("task6"); db.items.find({});'
+]0;mongosh mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000[
+  { _id: ObjectId([32m'67d9ef1d32fcc506ae6b140b'[39m), model: [32m'ThinkPad X1'[39m },
+  { _id: ObjectId([32m'67d9ef3450a26553796b140b'[39m), model: [32m'ThinkPad X2'[39m },
+  { _id: ObjectId([32m'67d9ef4f03ca6622ee6b140b'[39m), model: [32m'ThinkPad X3'[39m }
+]
+[?2004h
+[31m[32m (main)[0m(write log)
+hp:[33m~/github/de-m2-distributed-databases/task6
+$[0m [?2004l
+exit
+
+Script done on 2025-03-19 00:10:31+02:00 [COMMAND_EXIT_CODE="0"]
