@@ -142,6 +142,6 @@ if __name__ == "__main__":
 
     experiment(delay_in_seconds=0, writeConcern=1)
     experiment(delay_in_seconds=0, writeConcern="majority")
-    experiment(delay_in_seconds=1, writeConcern=1)
+    experiment(delay_in_seconds=10, writeConcern=1)
     time.sleep(10)
-    experiment(delay_in_seconds=1, writeConcern="majority")
+    experiment(delay_in_seconds=10, writeConcern="majority")

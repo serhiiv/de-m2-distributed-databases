@@ -1,0 +1,119 @@
+Script started on 2025-03-19 22:47:36+00:00 [TERM="xterm-mono" TTY="/dev/pts/1" COLUMNS="101" LINES="52"]
+[?2004h
+(.venv) (main)
+ls-8680:~/de-m2-distributed-databases/task6
+$ [7mlsmem[m[C[Clsmem
+[?2004lRANGE                                 SIZE  STATE REMOVABLE BLOCK
+0x0000000000000000-0x000000187fffffff  98G online       yes  0-48
+
+Memory block size:         2G
+Total online memory:      98G
+Total offline memory:      0B
+[?2004h
+(.venv) (main)
+ls-8680:~/de-m2-distributed-databases/task6
+$ [7mlscpu | grep -E '^Thread|^Core|^Socket|^CPU\('[m[C[Clscpu | grep -E '^Thread|^Core|^Socket|^CPU\('
+[?2004lCPU(s):                               32
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            2
+CPU(s) scaling MHz:                   46%
+[?2004h
+(.venv) (main)
+ls-8680:~/de-m2-distributed-databases/task6
+$ [7mpython3 solution.py[m[C[Cpython3 solution.py
+[?2004l
+
+
+22:48:02.104022   === Start experiment :
+                  primary node : mongo1
+                  writeConcern : 1
+                  delay in sec : 0
+22:48:02.138156   Initialize 'grades' collection
+22:48:02.161929   Likes for 'MongoDB' is equal to 0.
+22:48:57.478166   tread 1 for item 'MongoDB' with counter 98973 took 55.2786 seconds.
+22:48:57.848805   tread 4 for item 'MongoDB' with counter 99664 took 55.6363 seconds.
+22:48:57.872626   tread 2 for item 'MongoDB' with counter 99712 took 55.6380 seconds.
+22:48:58.121989   tread 9 for item 'MongoDB' with counter 99797 took 55.8588 seconds.
+22:48:58.137526   tread 3 for item 'MongoDB' with counter 99817 took 55.9371 seconds.
+22:48:58.164614   tread 0 for item 'MongoDB' with counter 99846 took 55.9560 seconds.
+22:48:58.191039   tread 6 for item 'MongoDB' with counter 99880 took 55.9830 seconds.
+22:48:58.241781   tread 8 for item 'MongoDB' with counter 99933 took 56.0117 seconds.
+22:48:58.263325   tread 5 for item 'MongoDB' with counter 99966 took 56.0588 seconds.
+22:48:58.312622   tread 7 for item 'MongoDB' with counter 99999 took 56.1092 seconds.
+22:48:58.338217   Likes for 'MongoDB' is equal to 100000.
+22:48:58.339170   === The experiment is over and took 56.2532 seconds.
+
+
+
+22:48:58.352389   === Start experiment :
+                  primary node : mongo1
+                  writeConcern : majority
+                  delay in sec : 0
+22:48:58.383306   Initialize 'grades' collection
+22:48:58.404378   Likes for 'MongoDB' is equal to 0.
+22:49:57.396200   tread 0 for item 'MongoDB' with counter 99460 took 58.9517 seconds.
+22:49:57.402374   tread 7 for item 'MongoDB' with counter 99469 took 58.9107 seconds.
+22:49:57.559629   tread 8 for item 'MongoDB' with counter 99632 took 59.0900 seconds.
+22:49:57.625333   tread 2 for item 'MongoDB' with counter 99741 took 59.1895 seconds.
+22:49:57.698783   tread 1 for item 'MongoDB' with counter 99840 took 59.2491 seconds.
+22:49:57.700095   tread 5 for item 'MongoDB' with counter 99843 took 59.2579 seconds.
+22:49:57.857183   tread 3 for item 'MongoDB' with counter 99871 took 59.4029 seconds.
+22:49:58.030216   tread 4 for item 'MongoDB' with counter 99965 took 59.5763 seconds.
+22:49:58.043123   tread 9 for item 'MongoDB' with counter 99973 took 59.5315 seconds.
+22:49:58.123575   tread 6 for item 'MongoDB' with counter 99999 took 59.6755 seconds.
+22:49:58.148024   Likes for 'MongoDB' is equal to 100000.
+22:49:58.149060   === The experiment is over and took 59.8098 seconds.
+
+
+
+22:49:58.163807   === Start experiment :
+                  primary node : mongo1
+                  writeConcern : 1
+                  delay in sec : 10
+22:49:58.193355   Initialize 'grades' collection
+22:49:58.210277   Likes for 'MongoDB' is equal to 0.
+22:50:08.256383   Disconnect the node 'mongo1' after 10 seconds after the start.
+22:51:18.558269   tread 1 for item 'MongoDB' with counter 99092 took 80.3273 seconds.
+22:51:18.812422   tread 9 for item 'MongoDB' with counter 99409 took 80.5090 seconds.
+22:51:18.932275   tread 6 for item 'MongoDB' with counter 99575 took 80.6817 seconds.
+22:51:18.978505   tread 4 for item 'MongoDB' with counter 99639 took 80.7305 seconds.
+22:51:18.979227   tread 8 for item 'MongoDB' with counter 99643 took 80.6650 seconds.
+22:51:19.013292   tread 3 for item 'MongoDB' with counter 99681 took 80.7504 seconds.
+22:51:19.017780   tread 5 for item 'MongoDB' with counter 99687 took 80.7623 seconds.
+22:51:19.025352   tread 0 for item 'MongoDB' with counter 99695 took 80.7797 seconds.
+22:51:19.087016   tread 7 for item 'MongoDB' with counter 99763 took 80.8059 seconds.
+22:51:19.227672   tread 2 for item 'MongoDB' with counter 99854 took 80.9825 seconds.
+22:51:19.248662   Likes for 'MongoDB' is equal to 99855.
+22:51:19.249480   Connected the node 'mongo1'.
+22:51:19.358774   === The experiment is over and took 81.2098 seconds.
+
+
+
+22:51:29.373669   === Start experiment :
+                  primary node : mongo3
+                  writeConcern : majority
+                  delay in sec : 10
+22:51:29.402619   Initialize 'grades' collection
+22:51:29.417738   Likes for 'MongoDB' is equal to 0.
+22:51:39.443452   Disconnect the node 'mongo3' after 10 seconds after the start.
+22:52:32.168702   tread 7 for item 'MongoDB' with counter 52836 took 62.7209 seconds.
+22:52:32.258339   tread 5 for item 'MongoDB' with counter 52942 took 62.7790 seconds.
+22:52:32.348645   tread 1 for item 'MongoDB' with counter 53023 took 62.8790 seconds.
+22:52:41.315904   tread 3 for item 'MongoDB' with counter 58772 took 71.8639 seconds.
+22:52:41.325215   tread 4 for item 'MongoDB' with counter 58776 took 71.8772 seconds.
+22:54:13.963892   tread 0 for item 'MongoDB' with counter 99866 took 164.5277 seconds.
+22:54:14.004043   tread 6 for item 'MongoDB' with counter 99910 took 164.5315 seconds.
+22:54:14.046307   tread 9 for item 'MongoDB' with counter 99949 took 164.5688 seconds.
+22:54:14.079996   tread 2 for item 'MongoDB' with counter 99969 took 164.6384 seconds.
+22:54:14.161037   tread 8 for item 'MongoDB' with counter 99999 took 164.7026 seconds.
+22:54:14.197630   Likes for 'MongoDB' is equal to 100000.
+22:54:14.198869   Connected the node 'mongo3'.
+22:54:14.288861   === The experiment is over and took 164.9299 seconds.
+[?2004h
+(.venv) (main)
+ls-8680:~/de-m2-distributed-databases/task6
+$ [?2004l
+exit
+
+Script done on 2025-03-19 22:54:37+00:00 [COMMAND_EXIT_CODE="0"]
