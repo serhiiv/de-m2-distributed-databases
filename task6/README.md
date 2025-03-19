@@ -21,7 +21,7 @@ mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=r
 mongosh "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0" --eval 'rs.config()'
 ```
 
-### Replication test
+### #1 Replication test
 
 Try executing `docker compose down` and `up` until the primary node is `mongo1` (27017). Because `replication_test.sh` works correctly only in that variant.
 
@@ -32,7 +32,7 @@ script typescript_1
 bash -v replication_test.sh
 ```
 
-### Performance analysis and integrity checking
+### #2 Performance analysis and integrity checking
 
 ```bash
 # start logging
@@ -49,7 +49,7 @@ python3 solution.py
 
 ```bash
 docker compose down
-docker image rm mongodb-community-server:latest
+docker image rm mongo:latest
 sudo rm -rf ${PWD}/rs_keyfile # need 'sudo' - execute a command as root
 ```
 
