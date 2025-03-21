@@ -1,4 +1,3 @@
-version: "3.3"
 services:
   cassandra-1:
     image: "cassandra:latest"
@@ -9,14 +8,9 @@ services:
     networks:
       - cassandra-net
     environment:
-      # - CASSANDRA_START_RPC=true       # default
-      # - CASSANDRA_RPC_ADDRESS=0.0.0.0  # default
-      # - CASSANDRA_LISTEN_ADDRESS=auto  # default, use IP addr of container # = CASSANDRA_BROADCAST_ADDRESS
-      - CASSANDRA_CLUSTER_NAME=my-cluster
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_DC=my-datacenter-1
-    # volumes:
-    #   - cassandra-node-1:/var/lib/cassandra:rw
+      - CASSANDRA_DC=de-2025-datacenter
+    volumes:
+      - ${PWD}/config/cassandra.yaml:/etc/cassandra/cassandra.yaml
     restart:
       on-failure
     healthcheck:
@@ -34,18 +28,13 @@ services:
     networks:
       - cassandra-net
     environment:
-      # - CASSANDRA_START_RPC=true       # default
-      # - CASSANDRA_RPC_ADDRESS=0.0.0.0  # default
-      # - CASSANDRA_LISTEN_ADDRESS=auto  # default, use IP addr of container # = CASSANDRA_BROADCAST_ADDRESS
-      - CASSANDRA_CLUSTER_NAME=my-cluster
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_DC=my-datacenter-1
+      - CASSANDRA_DC=de-2025-datacenter
       - CASSANDRA_SEEDS=cassandra-1
     depends_on:
       cassandra-1:
         condition: service_healthy
-    # volumes:
-    #   - cassandra-node-2:/var/lib/cassandra:rw
+    volumes:
+      - ${PWD}/config/cassandra.yaml:/etc/cassandra/cassandra.yaml
     restart:
       on-failure
     healthcheck:
@@ -63,18 +52,13 @@ services:
     networks:
       - cassandra-net
     environment:
-      # - CASSANDRA_START_RPC=true       # default
-      # - CASSANDRA_RPC_ADDRESS=0.0.0.0  # default
-      # - CASSANDRA_LISTEN_ADDRESS=auto  # default, use IP addr of container # = CASSANDRA_BROADCAST_ADDRESS
-      - CASSANDRA_CLUSTER_NAME=my-cluster
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_DC=my-datacenter-1
+      - CASSANDRA_DC=de-2025-datacenter
       - CASSANDRA_SEEDS=cassandra-1
     depends_on:
       cassandra-2:
         condition: service_healthy
-    # volumes:
-    #   - cassandra-node-3:/var/lib/cassandra:rw
+    volumes:
+      - ${PWD}/config/cassandra.yaml:/etc/cassandra/cassandra.yaml
     restart:
       on-failure
     healthcheck:
@@ -83,11 +67,6 @@ services:
       start_period: 2m
       timeout: 10s
       retries: 3
-
-# volumes:
-#   cassandra-node-1:
-#   cassandra-node-2:
-#   cassandra-node-3:
 
 networks:
   cassandra-net:
