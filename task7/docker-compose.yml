@@ -1,0 +1,74 @@
+services:
+  cassandra-1:
+    image: "cassandra:latest"
+    container_name: "cassandra-1"
+    ports:
+      - 7000:7000
+      - 9042:9042
+    networks:
+      - cassandra-net
+    environment:
+      - CASSANDRA_DC=de-2025-datacenter
+    volumes:    
+      - ${PWD}/config/cassandra.yaml:/etc/cassandra/cassandra.yaml
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status"]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+  cassandra-2:
+    image: "cassandra:latest"
+    container_name: "cassandra-2"
+    ports:
+      - 9043:9042
+    networks:
+      - cassandra-net
+    environment:
+      - CASSANDRA_DC=de-2025-datacenter
+      - CASSANDRA_SEEDS=cassandra-1
+    depends_on:
+      cassandra-1:
+        condition: service_healthy
+    volumes:
+      - ${PWD}/config/cassandra.yaml:/etc/cassandra/cassandra.yaml
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status"]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+  cassandra-3:
+    image: "cassandra:latest"
+    container_name: "cassandra-3"
+    ports:
+      - 9044:9042
+    networks:
+      - cassandra-net
+    environment:
+      - CASSANDRA_DC=de-2025-datacenter
+      - CASSANDRA_SEEDS=cassandra-1
+    depends_on:
+      cassandra-2:
+        condition: service_healthy
+    volumes:
+      - ${PWD}/config/cassandra.yaml:/etc/cassandra/cassandra.yaml
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status"]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+networks:
+  cassandra-net:
+    name: cassandra-net
+    driver: bridge
