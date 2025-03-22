@@ -1,0 +1,522 @@
+Script started on 2025-03-22 17:26:52+00:00 [COMMAND="bash -v solution.sh" TERM="xterm-mono" TTY="/dev/pts/9" COLUMNS="205" LINES="51"]
+# ==========================================================================
+# 2. Перевірити правильність конфігурації за допомогою nodetool status
+docker exec cassandra-3 nodetool status
+Datacenter: de-2025-datacenter
+==============================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns (effective)  Host ID                               Rack 
+UN  172.23.0.3  80.05 KiB   16      59.3%             57413186-6dec-4da1-becf-097171a5f864  rack1
+UN  172.23.0.4  80.06 KiB   16      76.0%             5b7ab741-da5f-462d-a6dc-d1899f2c3adb  rack1
+UN  172.23.0.2  119.83 KiB  16      64.7%             b9c09ffa-da1a-4ae4-8f32-0e79b4abd2ea  rack1
+
+
+# ==========================================================================
+# 3. Викоритовуючи  cqlsh, створити три Keyspace з replication factor 1, 2, 3 з SimpleStrategy
+
+docker exec cassandra-1 cqlsh -e "DROP KEYSPACE IF EXISTS factor1;"
+docker exec cassandra-1 cqlsh -e "CREATE KEYSPACE factor1 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};"
+docker exec cassandra-1 cqlsh -e "DESCRIBE KEYSPACE factor1;"
+
+CREATE KEYSPACE factor1 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
+
+docker exec cassandra-1 cqlsh -e "DROP KEYSPACE IF EXISTS factor2;"
+docker exec cassandra-1 cqlsh -e "CREATE KEYSPACE factor2 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 2};"
+docker exec cassandra-1 cqlsh -e "DESCRIBE KEYSPACE factor2;"
+
+CREATE KEYSPACE factor2 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '2'}  AND durable_writes = true;
+
+docker exec cassandra-1 cqlsh -e "DROP KEYSPACE IF EXISTS factor3;"
+docker exec cassandra-1 cqlsh -e "CREATE KEYSPACE factor3 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};"
+docker exec cassandra-1 cqlsh -e "DESCRIBE KEYSPACE factor3;"
+
+CREATE KEYSPACE factor3 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true;
+
+
+# ==========================================================================
+# 4. В кожному з кейспейсів створити прості таблиці 
+
+docker exec cassandra-1 cqlsh -e "USE factor1; CREATE TABLE clouds(name text PRIMARY KEY, rating INT);"
+docker exec cassandra-1 cqlsh -e "USE factor1; DESCRIBE TABLE clouds;"
+
+CREATE TABLE factor1.clouds (
+    name text PRIMARY KEY,
+    rating int
+) WITH additional_write_policy = '99p'
+    AND allow_auto_snapshot = true
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND cdc = false
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '16', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND memtable = 'default'
+    AND crc_check_chance = 1.0
+    AND default_time_to_live = 0
+    AND extensions = {}
+    AND gc_grace_seconds = 864000
+    AND incremental_backups = true
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair = 'BLOCKING'
+    AND speculative_retry = '99p';
+
+docker exec cassandra-1 cqlsh -e "USE factor2; CREATE TABLE languages(name text PRIMARY KEY, rating INT);"
+docker exec cassandra-1 cqlsh -e "USE factor2; DESCRIBE TABLE languages;"
+
+CREATE TABLE factor2.languages (
+    name text PRIMARY KEY,
+    rating int
+) WITH additional_write_policy = '99p'
+    AND allow_auto_snapshot = true
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND cdc = false
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '16', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND memtable = 'default'
+    AND crc_check_chance = 1.0
+    AND default_time_to_live = 0
+    AND extensions = {}
+    AND gc_grace_seconds = 864000
+    AND incremental_backups = true
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair = 'BLOCKING'
+    AND speculative_retry = '99p';
+
+docker exec cassandra-1 cqlsh -e "USE factor3; CREATE TABLE databases(name text PRIMARY KEY, rating INT);"
+docker exec cassandra-1 cqlsh -e "USE factor3; DESCRIBE TABLE databases;"
+
+CREATE TABLE factor3.databases (
+    name text PRIMARY KEY,
+    rating int
+) WITH additional_write_policy = '99p'
+    AND allow_auto_snapshot = true
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND cdc = false
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '16', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND memtable = 'default'
+    AND crc_check_chance = 1.0
+    AND default_time_to_live = 0
+    AND extensions = {}
+    AND gc_grace_seconds = 864000
+    AND incremental_backups = true
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair = 'BLOCKING'
+    AND speculative_retry = '99p';
+
+
+# ==========================================================================
+# 5. Спробуйте писати і читати в ці таблиці підключаюсь на різні ноди.
+# clouds
+docker exec cassandra-1 cqlsh -e "USE factor1; INSERT INTO clouds (name, rating) VALUES ('Google Clouds', 10); SELECT * FROM clouds;"
+
+ name          | rating
+---------------+--------
+ Google Clouds |     10
+
+(1 rows)
+
+docker exec cassandra-2 cqlsh -e "USE factor1; INSERT INTO clouds (name, rating) VALUES ('Azure', 8); SELECT * FROM clouds;"
+
+ name          | rating
+---------------+--------
+ Google Clouds |     10
+         Azure |      8
+
+(2 rows)
+
+docker exec cassandra-3 cqlsh -e "USE factor1; INSERT INTO clouds (name, rating) VALUES ('AWS', 9); SELECT * FROM clouds;"
+
+ name          | rating
+---------------+--------
+           AWS |      9
+ Google Clouds |     10
+         Azure |      8
+
+(3 rows)
+
+# languages
+docker exec cassandra-1 cqlsh -e "USE factor2; INSERT INTO languages (name, rating) VALUES ('Scala', 10); SELECT * FROM languages;"
+
+ name  | rating
+-------+--------
+ Scala |     10
+
+(1 rows)
+
+docker exec cassandra-2 cqlsh -e "USE factor2; INSERT INTO languages (name, rating) VALUES ('Python', 8); SELECT * FROM languages;"
+
+ name   | rating
+--------+--------
+  Scala |     10
+ Python |      8
+
+(2 rows)
+
+docker exec cassandra-3 cqlsh -e "USE factor2; INSERT INTO languages (name, rating) VALUES ('Java', 9); SELECT * FROM languages;"
+
+ name   | rating
+--------+--------
+  Scala |     10
+   Java |      9
+ Python |      8
+
+(3 rows)
+
+docker exec cassandra-1 cqlsh -e "USE factor2; INSERT INTO languages (name, rating) VALUES ('C#', 9); SELECT * FROM languages;"
+
+ name   | rating
+--------+--------
+  Scala |     10
+   Java |      9
+ Python |      8
+     C# |      9
+
+(4 rows)
+
+# databases
+docker exec cassandra-1 cqlsh -e "USE factor3; INSERT INTO databases (name, rating) VALUES ('PostgreSQL', 10); SELECT * FROM databases;"
+
+ name       | rating
+------------+--------
+ PostgreSQL |     10
+
+(1 rows)
+
+docker exec cassandra-2 cqlsh -e "USE factor3; INSERT INTO databases (name, rating) VALUES ('MongoDB', 8); SELECT * FROM databases;"
+
+ name       | rating
+------------+--------
+    MongoDB |      8
+ PostgreSQL |     10
+
+(2 rows)
+
+docker exec cassandra-3 cqlsh -e "USE factor3; INSERT INTO databases (name, rating) VALUES ('Neo4j', 9); SELECT * FROM databases;"
+
+ name       | rating
+------------+--------
+    MongoDB |      8
+      Neo4j |      9
+ PostgreSQL |     10
+
+(3 rows)
+
+docker exec cassandra-1 cqlsh -e "USE factor3; INSERT INTO databases (name, rating) VALUES ('MySQL', 8); SELECT * FROM databases;"
+
+ name       | rating
+------------+--------
+    MongoDB |      8
+      MySQL |      8
+      Neo4j |      9
+ PostgreSQL |     10
+
+(4 rows)
+
+docker exec cassandra-2 cqlsh -e "USE factor3; INSERT INTO databases (name, rating) VALUES ('SQLite', 5); SELECT * FROM databases;"
+
+ name       | rating
+------------+--------
+    MongoDB |      8
+      MySQL |      8
+      Neo4j |      9
+ PostgreSQL |     10
+     SQLite |      5
+
+(5 rows)
+
+
+# ==========================================================================
+# 6. Вставте дані в створені таблиці і подивіться на їх розподіл по вузлах кластера для кожного з кейспесов (команда nodetool status)
+docker exec cassandra-1 nodetool status factor1
+Datacenter: de-2025-datacenter
+==============================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns (effective)  Host ID                               Rack 
+UN  172.23.0.3  80.05 KiB   16      31.6%             57413186-6dec-4da1-becf-097171a5f864  rack1
+UN  172.23.0.4  80.06 KiB   16      35.7%             5b7ab741-da5f-462d-a6dc-d1899f2c3adb  rack1
+UN  172.23.0.2  120.87 KiB  16      32.7%             b9c09ffa-da1a-4ae4-8f32-0e79b4abd2ea  rack1
+
+
+docker exec cassandra-1 nodetool status factor2
+Datacenter: de-2025-datacenter
+==============================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns (effective)  Host ID                               Rack 
+UN  172.23.0.3  80.05 KiB   16      59.3%             57413186-6dec-4da1-becf-097171a5f864  rack1
+UN  172.23.0.4  80.06 KiB   16      76.0%             5b7ab741-da5f-462d-a6dc-d1899f2c3adb  rack1
+UN  172.23.0.2  120.87 KiB  16      64.7%             b9c09ffa-da1a-4ae4-8f32-0e79b4abd2ea  rack1
+
+
+docker exec cassandra-1 nodetool status factor3
+Datacenter: de-2025-datacenter
+==============================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load        Tokens  Owns (effective)  Host ID                               Rack 
+UN  172.23.0.3  80.05 KiB   16      100.0%            57413186-6dec-4da1-becf-097171a5f864  rack1
+UN  172.23.0.4  80.06 KiB   16      100.0%            5b7ab741-da5f-462d-a6dc-d1899f2c3adb  rack1
+UN  172.23.0.2  120.87 KiB  16      100.0%            b9c09ffa-da1a-4ae4-8f32-0e79b4abd2ea  rack1
+
+
+
+# ==========================================================================
+# 7. Для якогось запису з кожного з кейспейсу виведіть ноди на яких зберігаються дані
+docker exec cassandra-1 nodetool getendpoints factor1 clouds "AWS"
+172.23.0.2
+
+docker exec cassandra-1 nodetool getendpoints factor2 languages "Java"
+172.23.0.4
+172.23.0.2
+
+docker exec cassandra-1 nodetool getendpoints factor3 databases "MySQL"
+172.23.0.4
+172.23.0.3
+172.23.0.2
+
+
+# ==========================================================================
+# 8. Відключити одну з нод. Для кожного з кейспейсів перевірити з якими рівнями consistency можемо читати та писати
+docker network disconnect cassandra-net cassandra-3
+
+docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+CONTAINER ID   NAMES         STATUS                    PORTS
+0c5bb03ce225   cassandra-3   Up 7 minutes (healthy)    
+20e0b795cbd4   cassandra-2   Up 9 minutes (healthy)    7000-7001/tcp, 7199/tcp, 9160/tcp, 0.0.0.0:9043->9042/tcp, [::]:9043->9042/tcp
+4d7259aaef46   cassandra-1   Up 10 minutes (healthy)   7001/tcp, 0.0.0.0:7000->7000/tcp, [::]:7000->7000/tcp, 7199/tcp, 0.0.0.0:9042->9042/tcp, [::]:9042->9042/tcp, 9160/tcp
+
+
+# для Keyspace з replication factor 1 - CONSISTENCY ONE
+docker exec cassandra-1 cqlsh -e "CONSISTENCY ONE; USE factor1; INSERT INTO clouds (name, rating) VALUES ('Oracle', 9);"
+Consistency level set to ONE.
+<stdin>:1:WriteTimeout: Error from server: code=1100 [Coordinator node timed out waiting for replica nodes' responses] message="Operation timed out - received only 0 responses." info={'consistency': 'ONE', 'required_responses': 1, 'received_responses': 0, 'write_type': 'SIMPLE'}
+docker exec cassandra-1 cqlsh -e "CONSISTENCY ONE; USE factor1; SELECT * FROM clouds;"
+Consistency level set to ONE.
+<stdin>:1:ReadTimeout: Error from server: code=1200 [Coordinator node timed out waiting for replica nodes' responses] message="Operation timed out - received only 0 responses." info={'consistency': 'ONE', 'required_responses': 1, 'received_responses': 0}
+
+# для Keyspace з replication factor 2 - CONSISTENCY ONE/TWO
+# TWO
+docker exec cassandra-1 cqlsh -e "CONSISTENCY TWO; USE factor2; INSERT INTO languages (name, rating) VALUES ('C#', 9);"
+Consistency level set to TWO.
+<stdin>:1:WriteTimeout: Error from server: code=1100 [Coordinator node timed out waiting for replica nodes' responses] message="Operation timed out - received only 1 responses." info={'consistency': 'TWO', 'required_responses': 2, 'received_responses': 1, 'write_type': 'SIMPLE'}
+docker exec cassandra-1 cqlsh -e "CONSISTENCY TWO; USE factor2; SELECT * FROM languages;"
+Consistency level set to TWO.
+<stdin>:1:NoHostAvailable: ('Unable to complete the operation against any hosts', {<Host: 127.0.0.1:9042 de-2025-datacenter>: Unavailable('Error from server: code=1000 [Unavailable exception] message="Cannot achieve consistency level TWO" info={\'consistency\': \'TWO\', \'required_replicas\': 2, \'alive_replicas\': 1}')})
+
+# ONE
+docker exec cassandra-1 cqlsh -e "CONSISTENCY ONE; USE factor2; INSERT INTO languages (name, rating) VALUES ('Java Script', 7);"
+Consistency level set to ONE.
+docker exec cassandra-1 cqlsh -e "CONSISTENCY ONE; USE factor2; SELECT * FROM languages;"
+Consistency level set to ONE.
+
+ name        | rating
+-------------+--------
+       Scala |     10
+        Java |      9
+      Python |      8
+ Java Script |      7
+          C# |      9
+
+(5 rows)
+
+# для Keyspace з replication factor 3 - CONSISTENCY ONE/TWO/THREE
+# THREE
+docker exec cassandra-1 cqlsh -e "CONSISTENCY THREE; USE factor3; INSERT INTO databases (name, rating) VALUES ('Snowflake', 7);"
+Consistency level set to THREE.
+<stdin>:1:NoHostAvailable: ('Unable to complete the operation against any hosts', {<Host: 127.0.0.1:9042 de-2025-datacenter>: Unavailable('Error from server: code=1000 [Unavailable exception] message="Cannot achieve consistency level THREE" info={\'consistency\': \'THREE\', \'required_replicas\': 3, \'alive_replicas\': 2}')})
+docker exec cassandra-1 cqlsh -e "CONSISTENCY THREE; USE factor3; SELECT * FROM databases;"
+Consistency level set to THREE.
+<stdin>:1:NoHostAvailable: ('Unable to complete the operation against any hosts', {<Host: 127.0.0.1:9042 de-2025-datacenter>: Unavailable('Error from server: code=1000 [Unavailable exception] message="Cannot achieve consistency level THREE" info={\'consistency\': \'THREE\', \'required_replicas\': 3, \'alive_replicas\': 2}')})
+
+# TWO
+docker exec cassandra-1 cqlsh -e "CONSISTENCY TWO; USE factor3; INSERT INTO databases (name, rating) VALUES ('Databricks', 9);"
+Consistency level set to TWO.
+docker exec cassandra-1 cqlsh -e "CONSISTENCY TWO; USE factor3; SELECT * FROM databases;"
+Consistency level set to TWO.
+
+ name       | rating
+------------+--------
+ Databricks |      9
+    MongoDB |      8
+      MySQL |      8
+      Neo4j |      9
+ PostgreSQL |     10
+     SQLite |      5
+
+(6 rows)
+
+# ONE
+docker exec cassandra-1 cqlsh -e "CONSISTENCY ONE; USE factor3; INSERT INTO databases (name, rating) VALUES ('Redis', 7);"
+Consistency level set to ONE.
+docker exec cassandra-1 cqlsh -e "CONSISTENCY ONE; USE factor3; SELECT * FROM databases;"
+Consistency level set to ONE.
+
+ name       | rating
+------------+--------
+      Redis |      7
+ Databricks |      9
+    MongoDB |      8
+      MySQL |      8
+      Neo4j |      9
+ PostgreSQL |     10
+     SQLite |      5
+
+(7 rows)
+
+
+docker network connect cassandra-net cassandra-3
+
+docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+CONTAINER ID   NAMES         STATUS                    PORTS
+0c5bb03ce225   cassandra-3   Up 8 minutes (healthy)    7000-7001/tcp, 7199/tcp, 9160/tcp, 0.0.0.0:9044->9042/tcp, [::]:9044->9042/tcp
+20e0b795cbd4   cassandra-2   Up 9 minutes (healthy)    7000-7001/tcp, 7199/tcp, 9160/tcp, 0.0.0.0:9043->9042/tcp, [::]:9043->9042/tcp
+4d7259aaef46   cassandra-1   Up 10 minutes (healthy)   7001/tcp, 0.0.0.0:7000->7000/tcp, [::]:7000->7000/tcp, 7199/tcp, 0.0.0.0:9042->9042/tcp, [::]:9042->9042/tcp, 9160/tcp
+
+
+# ==========================================================================
+# 9. Зробить так щоб три ноди працювали, але не бачили одна одну по мережі (заблокуйте чи відключити зв'язок між ними)
+docker network disconnect cassandra-net cassandra-1
+
+docker network disconnect cassandra-net cassandra-2
+
+docker network disconnect cassandra-net cassandra-3
+
+docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+CONTAINER ID   NAMES         STATUS                    PORTS
+0c5bb03ce225   cassandra-3   Up 8 minutes (healthy)    
+20e0b795cbd4   cassandra-2   Up 9 minutes (healthy)    
+4d7259aaef46   cassandra-1   Up 10 minutes (healthy)   
+
+
+# ==========================================================================
+# 10. Для кейспейсу з replication factor 3 задайте рівень consistency рівним 1. Виконайте по черзі запис значення з однаковим primary key, але різними іншими значенням окремо на кожну з нод (тобто створіть конфлікт)
+
+docker exec cassandra-1 cqlsh -e "CONSISTENCY ONE; USE factor3; INSERT INTO databases (name, rating) VALUES ('Apache Cassandra', 1);"
+Consistency level set to ONE.
+docker exec cassandra-1 cqlsh -e "CONSISTENCY ONE; USE factor3; SELECT * FROM databases;"
+Consistency level set to ONE.
+
+ name             | rating
+------------------+--------
+            Redis |      7
+       Databricks |      9
+ Apache Cassandra |      1
+          MongoDB |      8
+            MySQL |      8
+            Neo4j |      9
+       PostgreSQL |     10
+           SQLite |      5
+
+(8 rows)
+
+docker exec cassandra-2 cqlsh -e "CONSISTENCY ONE; USE factor3; INSERT INTO databases (name, rating) VALUES ('Apache Cassandra', 2);"
+Consistency level set to ONE.
+docker exec cassandra-2 cqlsh -e "CONSISTENCY ONE; USE factor3; SELECT * FROM databases;"
+Consistency level set to ONE.
+
+ name             | rating
+------------------+--------
+            Redis |      7
+       Databricks |      9
+ Apache Cassandra |      2
+          MongoDB |      8
+            MySQL |      8
+            Neo4j |      9
+       PostgreSQL |     10
+           SQLite |      5
+
+(8 rows)
+
+docker exec cassandra-3 cqlsh -e "CONSISTENCY ONE; USE factor3; INSERT INTO databases (name, rating) VALUES ('Apache Cassandra', 3);"
+Consistency level set to ONE.
+docker exec cassandra-3 cqlsh -e "CONSISTENCY ONE; USE factor3; SELECT * FROM databases;"
+Consistency level set to ONE.
+
+ name             | rating
+------------------+--------
+ Apache Cassandra |      3
+          MongoDB |      8
+            MySQL |      8
+            Neo4j |      9
+       PostgreSQL |     10
+           SQLite |      5
+
+(6 rows)
+
+
+
+# ==========================================================================
+# 11. Відновіть зв'язок між нодами, і перевірте що вони знову об'єдналися у кластер. Визначте яким чином була вирішений конфлікт даних та яке значення було прийнято кластером та за яким принципом
+docker network connect cassandra-net cassandra-1
+
+docker network connect cassandra-net cassandra-2
+
+docker network connect cassandra-net cassandra-3
+
+docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+CONTAINER ID   NAMES         STATUS                    PORTS
+0c5bb03ce225   cassandra-3   Up 8 minutes (healthy)    7000-7001/tcp, 7199/tcp, 9160/tcp, 0.0.0.0:9044->9042/tcp, [::]:9044->9042/tcp
+20e0b795cbd4   cassandra-2   Up 9 minutes (healthy)    7000-7001/tcp, 7199/tcp, 9160/tcp, 0.0.0.0:9043->9042/tcp, [::]:9043->9042/tcp
+4d7259aaef46   cassandra-1   Up 10 minutes (healthy)   7001/tcp, 0.0.0.0:7000->7000/tcp, [::]:7000->7000/tcp, 7199/tcp, 0.0.0.0:9042->9042/tcp, [::]:9042->9042/tcp, 9160/tcp
+
+sleep 10
+
+docker exec cassandra-1 cqlsh -e "USE factor3; SELECT * FROM databases;"
+
+ name             | rating
+------------------+--------
+            Redis |      7
+       Databricks |      9
+ Apache Cassandra |      1
+          MongoDB |      8
+            MySQL |      8
+            Neo4j |      9
+       PostgreSQL |     10
+           SQLite |      5
+
+(8 rows)
+
+docker exec cassandra-2 cqlsh -e "USE factor3; SELECT * FROM databases;"
+
+ name             | rating
+------------------+--------
+            Redis |      7
+       Databricks |      9
+ Apache Cassandra |      2
+          MongoDB |      8
+            MySQL |      8
+            Neo4j |      9
+       PostgreSQL |     10
+           SQLite |      5
+
+(8 rows)
+
+docker exec cassandra-3 cqlsh -e "USE factor3; SELECT * FROM databases;"
+
+ name             | rating
+------------------+--------
+            Redis |      7
+       Databricks |      9
+ Apache Cassandra |      3
+          MongoDB |      8
+            MySQL |      8
+            Neo4j |      9
+       PostgreSQL |     10
+           SQLite |      5
+
+(8 rows)
+
+Script done on 2025-03-22 17:28:27+00:00 [COMMAND_EXIT_CODE="0"]

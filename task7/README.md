@@ -5,7 +5,7 @@
 Install `docker`
 
 ```bash
-docker-compose up -d
+docker compose up -d
 sleep 300
 ```
 
